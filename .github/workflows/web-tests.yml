@@ -23,9 +23,6 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Set up Chrome
-        uses: browser-actions/setup-chrome@v1
-
       - name: Install dependencies
         run: pip install -r web-tests/requirements.txt
 
