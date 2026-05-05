@@ -1,0 +1,45 @@
+name: Web Tests - SauceDemo
+
+on:
+  push:
+    paths:
+      - "web-tests/**"
+      - ".github/workflows/web-tests.yml"
+  pull_request:
+    paths:
+      - "web-tests/**"
+
+jobs:
+  web-tests:
+    name: Run Web E2E Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install dependencies
+        run: pip install -r web-tests/requirements.txt
+
+      - name: Run tests
+        working-directory: web-tests
+        run: |
+          pytest \
+            --html=../reports/web-report.html \
+            --self-contained-html \
+            -v
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-test-report
+          path: reports/web-report.html
